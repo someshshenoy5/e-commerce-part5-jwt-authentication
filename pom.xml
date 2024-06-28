@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.telusko</groupId>
-    <artifactId>e-commerce-part-5-login-with-jwt</artifactId>
+    <artifactId>e-commerce-part-5-jwt-authentication</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>e-commerce-part-5-login-with-jwt</name>
     <description>e-commerce-part-5-login-with-jwt</description>
