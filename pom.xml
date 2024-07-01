@@ -89,6 +89,7 @@
     </dependencies>
 
     <build>
+        <finalName>e-comme</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
