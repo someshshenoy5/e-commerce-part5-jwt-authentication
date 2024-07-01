@@ -45,8 +45,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .cors(AbstractHttpConfigurer::disable) //  Apply CORS
-                .csrf(AbstractHttpConfigurer::disable) // Apply protection
+                .cors(Customizer.withDefaults()) // Apply CORS
+                .csrf(csrf->csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/addUser", "/auth/login").permitAll() // Permit all requests to the /auth/addUser and /auth/login endpoints
                         .requestMatchers("/h2-console/**").permitAll() // Permit all requests to the H2 console
