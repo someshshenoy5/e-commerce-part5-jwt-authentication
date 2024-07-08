@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -102,4 +104,16 @@ public class ProductController {
         List<Product> products = productService.searchProducts(keyword);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+
+    @PostMapping("/checkout")
+    public ResponseEntity<BigDecimal> checkout(@RequestBody Map<Integer, Integer> productQuantities) {
+        try {
+            BigDecimal totalPrice = productService.checkout(productQuantities);
+            return ResponseEntity.ok(totalPrice);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 }
