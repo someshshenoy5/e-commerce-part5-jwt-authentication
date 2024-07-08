@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Apply CORS
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/addUser", "/auth/login").permitAll() // Permit all requests to the /auth/addUser and /auth/login endpoints
+                        .requestMatchers("/auth/addUser", "/auth/login","api/checkout").permitAll() // Permit all requests to the /auth/addUser and /auth/login endpoints
                         .requestMatchers("/h2-console/**").permitAll() // Permit all requests to the H2 console
                         .anyRequest().authenticated()) // Require authentication for all other requests
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))// Disable frame options
