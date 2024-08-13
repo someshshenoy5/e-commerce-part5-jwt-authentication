@@ -12,7 +12,7 @@ const Cart = () => {
   const [showModal, setShowModal] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [orderValue, setOrderValue]= useState('')
+  const [orderValue, setOrderValue] = useState("");
   const { token } = useContext(AppContext);
 
   useEffect(() => {
@@ -68,26 +68,29 @@ const Cart = () => {
   }, [cartItems]);
 
   const handleIncreaseQuantity = (itemId) => {
-    const newCartItems = cartItems.map((item) => {
-      if (item.id === itemId) {
-        if (item.quantity < item.stockQuantity) {
-          return { ...item, quantity: item.quantity + 1 };
-        } else {
-          alert("Cannot add more than available stock");
+    setCartItems((prevCartItems) => {
+      return prevCartItems.map((item) => {
+        if (item.id === itemId) {
+          if (item.quantity < item.stockQuantity) {
+            return { ...item, quantity: item.quantity + 1 };
+          } else {
+            alert("Cannot add more than available stock");
+          }
         }
-      }
-      return item;
+        return item;
+      });
     });
-    setCartItems(newCartItems);
   };
-
+  
+  
   const handleDecreaseQuantity = (itemId) => {
-    const newCartItems = cartItems.map((item) =>
-      item.id === itemId
-        ? { ...item, quantity: Math.max(item.quantity - 1, 1) }
-        : item
-    );
-    setCartItems(newCartItems);
+    setCartItems(prevCartItems => {
+      return prevCartItems.map((item) =>
+        item.id === itemId
+          ? { ...item, quantity: Math.max(item.quantity - 1, 1) }
+          : item
+      );
+    });
   };
 
   const handleRemoveFromCart = (itemId) => {
@@ -113,7 +116,7 @@ const Cart = () => {
         }
       );
       console.log(response.data);
-      setOrderValue(response.data)
+      setOrderValue(response.data);
       setShowModal(false);
       setOrderConfirmed(true);
       setErrorMessage("");
@@ -146,7 +149,6 @@ const Cart = () => {
                   className="item"
                   style={{ display: "flex", alignContent: "center" }}
                 >
-                 
                   <div>
                     <img
                       src={item.imageUrl}
@@ -161,19 +163,19 @@ const Cart = () => {
 
                   <div className="quantity">
                     <button
-                      className="plus-btn"
-                      type="button"
-                      onClick={() => handleIncreaseQuantity(item.id)}
-                    >
-                      <i className="bi bi-plus-square-fill"></i>
-                    </button>
-                    <input type="button" value={item.quantity} readOnly />
-                    <button
                       className="minus-btn"
                       type="button"
                       onClick={() => handleDecreaseQuantity(item.id)}
                     >
                       <i className="bi bi-dash-square-fill"></i>
+                    </button>
+                    <input type="button" value={item.quantity} readOnly />
+                    <button
+                      className="plus-btn"
+                      type="button"
+                      onClick={() => handleIncreaseQuantity(item.id)}
+                    >
+                      <i className="bi bi-plus-square-fill"></i>
                     </button>
                   </div>
 

@@ -2,18 +2,17 @@ import axios from "../axios";
 import { useState, useEffect, createContext } from "react";
 
 const AppContext = createContext({
-  data: [],
+  
   isError: "",
   cart: [],
   addToCart: (product) => {},
   removeFromCart: (productId) => {},
-  refreshData: () => {},
+ 
   updateStockQuantity: (productId, newQuantity) => {},
   token: ""
 });
 
 export const AppProvider = ({ children }) => {
-  const [data, setData] = useState([]);
   const [isError, setIsError] = useState("");
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -43,33 +42,17 @@ export const AppProvider = ({ children }) => {
     console.log("CART", cart);
   };
 
-  const refreshData = async () => {
-    try {
-      const response = await axios.get("/products", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setData(response.data);
-    } catch (error) {
-      setIsError(error.message);
-    }
-  };
 
   const clearCart = () => {
     setCart([]);
   };
 
   useEffect(() => {
-    refreshData();
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
   return (
-    <AppContext.Provider value={{ data, isError, cart, addToCart, removeFromCart, refreshData, clearCart, token }}>
+    <AppContext.Provider value={{ isError, cart, addToCart, removeFromCart, clearCart, token }}>
       {children}
     </AppContext.Provider>
   );

@@ -5,6 +5,7 @@ const OrderConfirmation = ({ show, handleClose, errorMessage,orderValue }) => {
 const navigate = useNavigate()
 const handlechange=()=>{
   navigate("/")
+  window.location.reload()
   handleClose()
 }
   return (
