@@ -1,13 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AppContext from "../Context/Context";
 
 const Home = ({ selectedCategory }) => {
-  const { addToCart, token } = useContext(AppContext);
+  const { addToCart} = useContext(AppContext);
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [isError, setIsError] = useState("");
   const [isDataFetched, setIsDataFetched] = useState(false);
+  const token = localStorage.getItem("token");
+  
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -165,32 +165,41 @@ const Login = () => {
     setIsLogin(!isLogin);
   };
 
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (isLogin) {
-      const response = await axios.post("http://localhost:8080/auth/login", {
-        userName,
-        password
-      });
-      const token = response.data;
-      console.log("Token:", token);
-      localStorage.setItem("token", token);
-    } else {
-      const response = await axios.post("http://localhost:8080/auth/addUser", {
-        userName,
-        email,
-        phoneNumber,
-        address,
-        password
-      });
-      const token = response.data;
-      console.log("Token:", token);
-      localStorage.setItem("token", token);
+    try {
+      let response;
+      if (isLogin) {
+        response = await axios.post("http://localhost:8080/auth/login", {
+          userName,
+          password
+        });
+        const token = response.data;
+        console.log("Token:", token);
+        localStorage.setItem("token", token);
+        alert('Login Successful')
+        navigate("/");
+      } else {
+        response = await axios.post("http://localhost:8080/auth/addUser", {
+          userName,
+          email,
+          phoneNumber,
+          address,
+          password
+        });
+        const token = response.data;
+        console.log("Token:", token);
+        localStorage.setItem("token", token);
+        alert('Signup successful! Please Login now.');
+        setIsLogin(true)
+        // navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert(isLogin ? "Login failed. Please check your username and password." : "Signup failed. Please check your details and try again.");
     }
-
-    navigate("/");
   };
-
   return (
     <div className="limiter">
       <div className="container-login100">

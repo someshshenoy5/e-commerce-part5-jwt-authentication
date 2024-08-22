@@ -42,13 +42,13 @@ function App() {
       <BrowserRouter>
         <Navbar onSelectCategory={handleCategorySelect} />
         <Routes>
+          <Route path="/login" element={<LoginSignupModal />} />
           <Route path="/" element={ <Home addToCart={addToCart} selectedCategory={selectedCategory} />}/>
           <Route path="/add_product" element={<AddProduct />} />
           <Route path="/product" element={<Product />} />
           <Route path="product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/product/update/:id" element={<UpdateProduct />} />
-          <Route path="/login" element={<LoginSignupModal />} />
         </Routes>
       </BrowserRouter>
     </AppProvider>
