@@ -42,8 +42,8 @@ function App() {
       <BrowserRouter>
         <Navbar onSelectCategory={handleCategorySelect} />
         <Routes>
-          <Route path="/login" element={<LoginSignupModal />} />
           <Route path="/" element={ <Home addToCart={addToCart} selectedCategory={selectedCategory} />}/>
+          <Route path="/login" element={<LoginSignupModal />} />
           <Route path="/add_product" element={<AddProduct />} />
           <Route path="/product" element={<Product />} />
           <Route path="product/:id" element={<Product />} />
