@@ -2,62 +2,62 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AppContext from "../Context/Context";
-import unplugged from "../assets/unplugged.png"
+
 const Home = ({ selectedCategory }) => {
   const { addToCart } = useContext(AppContext);
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [isError, setIsError] = useState("");
-  const [isDataFetched, setIsDataFetched] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
   const token = localStorage.getItem("token");
-  
 
-  useEffect(() => {
-    if (!token) {
-      localStorage.removeItem("token");
-      navigate("/login");
-      return;
-    }
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/products", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/api/products", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const productsWithImages = await Promise.all(
-          response.data.map(async (product) => {
-            try {
-              const imageResponse = await axios.get(
-                `http://localhost:8080/api/product/${product.id}/image`,
-                {
-                  responseType: "blob",
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              );
-              const imageUrl = URL.createObjectURL(imageResponse.data);
-              return { ...product, imageUrl };
-            } catch (error) {
-              console.error("Error fetching image:", error);
-              return { ...product, imageUrl: "placeholder-image-url" };
-            }
-          })
-        );
-        setProducts(productsWithImages);
-      } catch (error) {
+      const productsWithImages = await Promise.all(
+        response.data.map(async (product) => {
+          try {
+            const imageResponse = await axios.get(
+              `http://localhost:8080/api/product/${product.id}/image`,
+              {
+                responseType: "blob",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const imageUrl = URL.createObjectURL(imageResponse.data);
+            return { ...product, imageUrl };
+          } catch (error) {
+            console.error("Error fetching image:", error);
+            return { ...product, imageUrl: "placeholder-image-url" };
+          }
+        })
+      );
+      setProducts(productsWithImages);
+      setDataFetched(true); // Mark data as fetched
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
         setIsError("Failed to fetch products. Please try again later.");
         console.error("Error fetching products:", error);
       }
-    };
-
-    if (!isDataFetched) {
-      fetchProducts();
-      setIsDataFetched(true);
     }
-  }, [isDataFetched, token, navigate]);
+  };
+
+  useEffect(() => {
+    // console.log("token",token)
+    if (token && !dataFetched) {
+      fetchProducts();
+    }
+  }, [token, dataFetched, navigate]);
 
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
@@ -68,13 +68,6 @@ const Home = ({ selectedCategory }) => {
       <h2 className="text-center" style={{ padding: "10rem" }}>
         Something went wrong...
       </h2>
-        //    <div style={{ display: "flex", justifyContent: "center" }}>
-        //    <img
-        //      style={{ padding: "10rem", height: "20rem" }}
-        //      src={unplugged}
-        //      alt="something went wrong"
-        //    />
-        //  </div>
     );
   }
 
@@ -102,8 +95,7 @@ const Home = ({ selectedCategory }) => {
         </h2>
       ) : (
         filteredProducts.map((product) => {
-          const { id, brand, name, price, productAvailable, imageUrl } =
-            product;
+          const { id, brand, name, price, productAvailable, imageUrl } = product;
           return (
             <div
               className="card mb-3"

@@ -17,7 +17,6 @@ const AddProduct = () => {
   });
   const [image, setImage] = useState(null);
   const navigate = useNavigate()
-  // const token = localStorage.getItem("token");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +51,7 @@ const AddProduct = () => {
         console.log("Product added successfully:", response.data);
         alert("Product added successfully");
         navigate("/");
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.error("Error adding product:", error);
